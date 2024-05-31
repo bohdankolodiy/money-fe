@@ -29,10 +29,3 @@
 .forget-password {
   text-align: right;
 }
-
-:host ::ng-deep {
-  .mat-mdc-text-field-wrapper {
-    border-bottom-right-radius: var(--mdc-filled-text-field-container-shape);
-    border-bottom-left-radius: var(--mdc-filled-text-field-container-shape);
-  }
-}
