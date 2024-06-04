@@ -50,7 +50,7 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.loginForm.valueChanges.subscribe((res) => {
+    this.loginForm.valueChanges.subscribe(() => {
       console.log(this.loginForm);
     });
   }

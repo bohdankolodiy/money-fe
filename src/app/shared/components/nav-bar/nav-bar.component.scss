@@ -1,0 +1,8 @@
+@import "../../../../assets/style/styles";
+
+:host {
+  @include size(200px, auto);
+  display: block;
+  background-color: #302d2d;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}

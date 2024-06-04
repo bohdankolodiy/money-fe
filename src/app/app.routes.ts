@@ -28,6 +28,13 @@ export const routes: Routes = [
       ).then((m) => m.ForgetPasswordComponent),
   },
   {
+    path: 'home',
+    loadComponent: () =>
+      import(
+        './modules/home/home.component'
+      ).then((m) => m.HomeComponent),
+  },
+  {
     path: '**',
     redirectTo: 'login',
   },
