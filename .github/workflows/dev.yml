@@ -22,4 +22,11 @@ jobs:
         run: |
           npm i
           npm run build:ci
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: npm install and npm run CI commands
+        run: |
+          npm i
           npm run lint:ci
