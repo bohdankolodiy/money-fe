@@ -1,0 +1,71 @@
+<ng-container [formGroup]="paymentForm">
+  <h2 class="white w-100 text-align-center">My payment</h2>
+
+  <section class="mt-30 card-payment">
+    <p class="white w-100 mb-20 font-size-20">Wallet account numner</p>
+    <p class="white w-100">5168 **** **** 0291</p>
+    <div class="flex align-items-center justify-space-between w-100 mt-100">
+      <p class="white">550</p>
+      <p class="white"><mat-icon>payments</mat-icon></p>
+    </div>
+  </section>
+
+  <section class="mt-20">
+    <p class="white font-size-20 mb-10">Recievers wallet</p>
+    <div
+      class="reciever-wallet flex align-items-center justify-center border-radius-10"
+    >
+      <mat-form-field class="w-100">
+        <mat-label>Enter reciever wallet</mat-label>
+        <input
+          matInput
+          placeholder="XXXX-XXXX-XXXX-XXX"
+          [formControlName]="'recieverWallet'"
+          required
+        />
+      </mat-form-field>
+    </div>
+  </section>
+
+  <section class="mt-20">
+    <p class="white font-size-20 mb-10">Amount</p>
+    <div
+      class="reciever-wallet flex align-items-center justify-center border-radius-10"
+    >
+      <mat-form-field class="w-100">
+        <mat-label>Enter amount</mat-label>
+        <input
+          matInput
+          placeholder="pat@example.com"
+          [formControlName]="'amount'"
+          required
+        />
+      </mat-form-field>
+    </div>
+  </section>
+
+  <section class="mt-20">
+    <p class="white font-size-20 mb-10">Comment</p>
+    <div
+      class="reciever-wallet flex align-items-center justify-center border-radius-10"
+    >
+      <mat-form-field class="w-100">
+        <mat-label>Enter your comment</mat-label>
+        <input
+          matInput
+          placeholder="pat@example.com"
+          [formControlName]="'comment'"
+          required
+        />
+      </mat-form-field>
+    </div>
+  </section>
+
+  <button
+    mat-flat-button
+    color="primary"
+    class="pl-50 pr-50 mt-40 font-size-16"
+  >
+    Send money
+  </button>
+</ng-container>

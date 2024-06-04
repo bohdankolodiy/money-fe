@@ -1,6 +1,7 @@
 $rangeOfNumber: ();
 $cursors: ("pointer");
 $fontWeights: ("normal", "bold", "light");
+$flexPositions: ("center", "start", "end", "space-around", "space-between");
 $colors: (
   "orange": #fdb75a,
   "gray": gray,
@@ -64,6 +65,36 @@ $directions: ("center", "left", "right");
   }
 }
 
+@each $margin in $rangeOfNumber {
+  .pt-#{$margin} {
+    padding-top: #{$margin}px !important;
+  }
+}
+
+@each $margin in $rangeOfNumber {
+  .pb-#{$margin} {
+    padding-bottom: #{$margin}px !important;
+  }
+}
+
+@each $margin in $rangeOfNumber {
+  .pr-#{$margin} {
+    padding-right: #{$margin}px !important;
+  }
+}
+
+@each $margin in $rangeOfNumber {
+  .pl-#{$margin} {
+    padding-left: #{$margin}px !important;
+  }
+}
+
+@each $margin in $rangeOfNumber {
+  .p-#{$margin} {
+    padding: #{$margin}px !important;
+  }
+}
+
 @each $fontSize in $rangeOfNumber {
   .font-size-#{$fontSize} {
     font-size: #{$fontSize}px !important;
@@ -103,5 +134,17 @@ $directions: ("center", "left", "right");
 @each $direction in $directions {
   .text-align-#{$direction} {
     text-align: #{$direction} !important;
+  }
+}
+
+@each $position in $flexPositions {
+  .align-items-#{$position} {
+    align-items: #{$position} !important;
+  }
+}
+
+@each $position in $flexPositions {
+  .justify-#{$position} {
+    justify-content: #{$position} !important;
   }
 }
