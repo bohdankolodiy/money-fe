@@ -71,6 +71,14 @@ body {
 }
 
 .mat-mdc-text-field-wrapper {
-  border-bottom-right-radius: var(--mdc-filled-text-field-container-shape)!important;
-  border-bottom-left-radius: var(--mdc-filled-text-field-container-shape)!important;
+  border-bottom-right-radius: var(
+    --mdc-filled-text-field-container-shape
+  ) !important;
+  border-bottom-left-radius: var(
+    --mdc-filled-text-field-container-shape
+  ) !important;
+}
+
+.mat-mdc-button-disabled .mdc-button__label {
+  color: rgba(255, 255, 255, 0.767) !important;
 }
