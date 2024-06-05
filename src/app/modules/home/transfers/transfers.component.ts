@@ -76,6 +76,8 @@ export class TransfersComponent {
       type: this.transferType,
     };
 
+    console.log(body);
+
     if (!(await this.opneConfirmModal())) return;
   }
 

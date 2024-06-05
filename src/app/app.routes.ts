@@ -10,14 +10,14 @@ export const routes: Routes = [
     path: 'registration',
     loadComponent: () =>
       import('./modules/registration/registration.component').then(
-        (m) => m.RegistrationComponent
+        (m) => m.RegistrationComponent,
       ),
   },
   {
     path: 'wait-email/:title',
     loadComponent: () =>
       import('./shared/components/wait-email/wait-email.component').then(
-        (m) => m.WaitEmailComponent
+        (m) => m.WaitEmailComponent,
       ),
   },
   {
@@ -29,10 +29,8 @@ export const routes: Routes = [
   },
   {
     path: 'home',
-    loadComponent: () =>
-      import(
-        './modules/home/home.component'
-      ).then((m) => m.HomeComponent),
+    loadChildren: () =>
+      import('./modules/home/home.routes').then((m) => m.routes),
   },
   {
     path: '**',
