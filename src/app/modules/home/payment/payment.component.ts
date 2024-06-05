@@ -30,7 +30,8 @@ export class PaymentComponent {
   paymentForm: FormGroup = new FormGroup({
     recieverWallet: new FormControl('', [
       Validators.required,
-      Validators.minLength(10),
+      Validators.minLength(16),
+      Validators.maxLength(16),
     ]),
     amount: new FormControl('', [Validators.required]),
     comment: new FormControl(''),
