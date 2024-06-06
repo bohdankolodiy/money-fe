@@ -11,6 +11,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
+import { HeaderComponent } from '../../../shared/components/header/header.component';
 
 @Component({
   selector: 'app-payment',
@@ -22,6 +23,7 @@ import { MatInputModule } from '@angular/material/input';
     FormsModule,
     ReactiveFormsModule,
     MatButtonModule,
+    HeaderComponent,
   ],
   templateUrl: './payment.component.html',
   styleUrl: './payment.component.scss',
