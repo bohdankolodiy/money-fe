@@ -9,6 +9,7 @@ $colors: (
   "whitegray": #d6d3d3,
   "lightmain": #004f4f,
   "green": green,
+  "black": #302d2d,
 );
 
 $directions: ("center", "left", "right");
@@ -62,6 +63,17 @@ $directions: ("center", "left", "right");
 @each $margin in $rangeOfNumber {
   .mb-#{$margin} {
     margin-bottom: #{$margin}px !important;
+  }
+}
+@each $margin in $rangeOfNumber {
+  .mr-#{$margin} {
+    margin-right: #{$margin}px !important;
+  }
+}
+
+@each $margin in $rangeOfNumber {
+  .ml-#{$margin} {
+    margin-left: #{$margin}px !important;
   }
 }
 

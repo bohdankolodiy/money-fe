@@ -15,11 +15,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { ConfirmationModalComponent } from '../../../shared/components/confirmation-modal/confirmation-modal.component';
 import { filter } from 'rxjs';
-
-enum transfers {
-  DEPOSIT = 'deposit',
-  WITHDRAWAL = 'withdrawal',
-}
+import { HeaderComponent } from '../../../shared/components/header/header.component';
+import { TransactTypes } from '../../../shared/enums/transact-types.enum';
 
 @Component({
   selector: 'app-transfers',
@@ -33,13 +30,14 @@ enum transfers {
     ReactiveFormsModule,
     MatButtonModule,
     MatDialogModule,
+    HeaderComponent,
   ],
   templateUrl: './transfers.component.html',
   styleUrl: './transfers.component.scss',
 })
 export class TransfersComponent {
   _dialog = inject(MatDialog);
-  transferType: string = transfers.DEPOSIT;
+  transferType: string = TransactTypes.DEPOSIT;
   transfersForm: FormGroup = new FormGroup({
     cardNumber: new FormControl('', [
       Validators.required,
@@ -64,7 +62,7 @@ export class TransfersComponent {
   }
 
   get buttonText(): string {
-    return this.transferType == transfers.DEPOSIT
+    return this.transferType == TransactTypes.DEPOSIT
       ? 'Send money to wallet'
       : 'Send money to card';
   }

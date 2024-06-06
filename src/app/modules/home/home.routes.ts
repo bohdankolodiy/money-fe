@@ -24,10 +24,11 @@ export const routes: Routes = [
             (m) => m.TransfersComponent,
           ),
       },
-      //   {
-      //     path: 'flight-edit/:id',
-      //     component: FlightEditComponent,
-      //   },
+      {
+        path: 'history',
+        loadComponent: () =>
+          import('./history/history.component').then((m) => m.HistoryComponent),
+      },
     ],
   },
 ];

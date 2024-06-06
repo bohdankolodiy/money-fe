@@ -1,0 +1,71 @@
+<app-header [title]="'History'"></app-header>
+
+<main class="w-100 flex mt-20">
+  <section
+    class="w-58 h-100 p-20 flex colDir align-items-center history-block mr-10"
+  >
+    @for (transact of transacts; track transact?.id) {
+      <div class="w-90 flex align-items-center justify-space-between mt-30">
+        <h2 class="text-align-center white">{{ getDate(transact) }}</h2>
+        <p class="white">{{ transact.amount }}</p>
+      </div>
+      @for (item of transact?.items; track item?.id; let j = $index) {
+        <div
+          class="bg-black p-20 history-item mt-20 flex align-items-center justify-space-between"
+        >
+          @if (isReciever(item)) {
+            <ng-container
+              *ngTemplateOutlet="reciever; context: { $implicit: item }"
+            ></ng-container>
+          } @else {
+            <ng-container
+              *ngTemplateOutlet="sender; context: { $implicit: item }"
+            ></ng-container>
+          }
+        </div>
+      }
+    }
+  </section>
+  <section class="w-40 h-100 box-shadow p-10">
+    <h2 class="white text-align-center bg-lightmain p-10 ml--10 mr--10">
+      Find transact
+    </h2>
+    <div class="w-100 flex align-items-start justify-space-around mt-20">
+      <mat-form-field class="w-80">
+        <mat-label>Enter transact id</mat-label>
+        <input matInput [formControl]="search" />
+      </mat-form-field>
+      <button mat-mini-fab aria-label="Logout" class="bg-lightmain mt-5">
+        <mat-icon>search</mat-icon>
+      </button>
+    </div>
+
+    <mat-divider class="w-100"></mat-divider>
+  </section>
+</main>
+
+<ng-template #reciever let-item>
+  <mat-icon class="white bg-lightmain border-radius-10 font-size-30">
+    keyboard_double_arrow_left
+  </mat-icon>
+  <div class="w-80">
+    <p class="whitegray">{{ item.action | uppercase }}</p>
+    <p class="white mt-5">Money transfer from {{ item.card || item.wallet }}</p>
+  </div>
+  <p class="green">
+    {{ item.amount }}
+  </p>
+</ng-template>
+
+<ng-template #sender let-item>
+  <mat-icon class="white bg-lightmain border-radius-10 font-size-30">
+    keyboard_double_arrow_right
+  </mat-icon>
+  <div class="w-80">
+    <p class="whitegray">{{ item.action | uppercase }}</p>
+    <p class="white mt-5">Money transfer to {{ item.card || item.wallet }}</p>
+  </div>
+  <p class="orange">
+    {{ item.amount }}
+  </p>
+</ng-template>
