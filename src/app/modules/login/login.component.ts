@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import {
   FormControl,
   Validators,
@@ -11,6 +11,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
 import { RouterModule } from '@angular/router';
+import { AuthService } from '../../services/auth/auth.service';
+import { IAuthBody } from '../../shared/interfaces/auth.interface';
 
 @Component({
   selector: 'app-login',
@@ -26,7 +28,7 @@ import { RouterModule } from '@angular/router';
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent {
   loginForm = new FormGroup({
     email: new FormControl<string>('', [Validators.required, Validators.email]),
     password: new FormControl<string>('', [Validators.required]),
@@ -49,10 +51,12 @@ export class LoginComponent implements OnInit {
       : 'Field is required';
   }
 
-  ngOnInit(): void {
-    this.loginForm.valueChanges.subscribe(() => {
-      console.log(this.loginForm);
-    });
+  constructor(private authService: AuthService) {}
+
+  submitForm() {
+    if (this.loginForm.invalid) return;
+    this.authService
+      .login(this.loginForm.getRawValue() as IAuthBody)
+      .subscribe();
   }
-  submitForm() {}
 }

@@ -14,6 +14,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { RouterModule } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
+import { AuthService } from '../../services/auth/auth.service';
+import { IAuthBody } from '../../shared/interfaces/auth.interface';
 
 @Component({
   selector: 'app-registration',
@@ -69,7 +71,17 @@ export class RegistrationComponent {
       : 'Field is required';
   }
 
-  submitForm() {}
+  constructor(private authService: AuthService) {}
+
+  submitForm() {
+    if (this.registrationForm.invalid) return;
+    const body: IAuthBody = {
+      email: this.email.value,
+      password: this.password.value,
+    };
+
+    this.authService.registration(body).subscribe();
+  }
 
   confirmPassValidator(): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null =>
