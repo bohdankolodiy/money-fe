@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { authGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
   {
@@ -28,9 +29,18 @@ export const routes: Routes = [
       ).then((m) => m.ForgetPasswordComponent),
   },
   {
+    path: 'veification',
+    loadComponent: () =>
+      import('./shared/components/verification/verification.component').then(
+        (m) => m.VerificationComponent,
+      ),
+  },
+
+  {
     path: 'home',
     loadChildren: () =>
       import('./modules/home/home.routes').then((m) => m.routes),
+    canActivate: [authGuard],
   },
   {
     path: '**',

@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { HomeComponent } from './home.component';
+import { authGuard } from '../../guards/auth.guard';
 
 export const routes: Routes = [
   {
@@ -16,6 +17,7 @@ export const routes: Routes = [
         path: 'payment',
         loadComponent: () =>
           import('./payment/payment.component').then((m) => m.PaymentComponent),
+        canActivate: [authGuard],
       },
       {
         path: 'transfers',
@@ -23,11 +25,13 @@ export const routes: Routes = [
           import('./transfers/transfers.component').then(
             (m) => m.TransfersComponent,
           ),
+        canActivate: [authGuard],
       },
       {
         path: 'history',
         loadComponent: () =>
           import('./history/history.component').then((m) => m.HistoryComponent),
+        canActivate: [authGuard],
       },
     ],
   },
