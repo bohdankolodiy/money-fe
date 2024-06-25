@@ -38,10 +38,6 @@ export class AuthService {
         this.cookieService.set('access_token', accessToken);
         this.loginRedirect(['/home']);
       }),
-      // switchMap(() => this.http.get(`${this.#pathUrl}/user`)),
-      // tap((res) => {
-      //   this.cookieService.set('user', JSON.stringify(res));
-      // }),
     );
   }
 
@@ -58,12 +54,8 @@ export class AuthService {
   }
 
   logout() {
-    this.http.post(`${this.#authUrl}/logout`, {}).pipe(
-      tap(() => {
-        this.deleteCookies();
-        this.loginRedirect(['/login']);
-      }),
-    );
+    this.deleteCookies();
+    this.loginRedirect(['/login']);
   }
 
   loginRedirect(params: Array<string>) {

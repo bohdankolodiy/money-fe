@@ -1,10 +1,20 @@
-import { Component, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnDestroy,
+  OnInit,
+  effect,
+  inject,
+  signal,
+} from '@angular/core';
 import {
   AbstractControl,
   FormControl,
   FormGroup,
   FormsModule,
   ReactiveFormsModule,
+  ValidationErrors,
+  ValidatorFn,
   Validators,
 } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -14,9 +24,11 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { ConfirmationModalComponent } from '../../../shared/components/confirmation-modal/confirmation-modal.component';
-import { filter } from 'rxjs';
+import { Subject, filter } from 'rxjs';
 import { HeaderComponent } from '../../../shared/components/header/header.component';
 import { TransactTypes } from '../../../shared/enums/transact-types.enum';
+import { IUser } from '../../../shared/interfaces/user.interface';
+import { UserService } from '../../../services/user/user.service';
 
 @Component({
   selector: 'app-transfers',
@@ -34,18 +46,14 @@ import { TransactTypes } from '../../../shared/enums/transact-types.enum';
   ],
   templateUrl: './transfers.component.html',
   styleUrl: './transfers.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TransfersComponent {
+export class TransfersComponent implements OnInit, OnDestroy {
+  user!: IUser;
+  private $destroy: Subject<boolean> = new Subject();
   _dialog = inject(MatDialog);
-  transferType: string = TransactTypes.DEPOSIT;
-  transfersForm: FormGroup = new FormGroup({
-    cardNumber: new FormControl('', [
-      Validators.required,
-      Validators.maxLength(16),
-      Validators.minLength(16),
-    ]),
-    amount: new FormControl('', [Validators.required]),
-  });
+  transferType = signal<string>(TransactTypes.DEPOSIT);
+  transfersForm!: FormGroup;
 
   get cardNumbber(): AbstractControl {
     return this.transfersForm.get('cardNumber')!;
@@ -62,21 +70,61 @@ export class TransfersComponent {
   }
 
   get buttonText(): string {
-    return this.transferType == TransactTypes.DEPOSIT
+    return this.transferType() == TransactTypes.DEPOSIT
       ? 'Send money to wallet'
       : 'Send money to card';
+  }
+
+  get isDeposit(): boolean {
+    return this.transferType() === TransactTypes.DEPOSIT;
+  }
+
+  constructor(private userService: UserService) {
+    effect(() => {
+      this.isDeposit
+        ? this.setAmountValidators()
+        : this.setAmountValidators([
+            Validators.required,
+            this.balanceValidator(),
+          ]);
+    });
+  }
+
+  ngOnInit(): void {
+    this.user = this.userService.getCookieUser();
+    this.buildTransfersForm();
+  }
+
+  setAmountValidators(validator: ValidatorFn[] = [Validators.required]) {
+    this.amount && this.amount?.setValidators(validator);
+  }
+
+  buildTransfersForm() {
+    this.transfersForm = new FormGroup({
+      cardNumber: new FormControl('', [
+        Validators.required,
+        Validators.maxLength(16),
+        Validators.minLength(16),
+      ]),
+      amount: new FormControl('', [Validators.required]),
+    });
+  }
+
+  setTransferType(event: { value: string }) {
+    this.transferType.set(event.value);
   }
 
   async sendMoney() {
     if (this.transfersForm.invalid) return;
     const body = {
       ...this.transfersForm.getRawValue(),
-      type: this.transferType,
     };
 
     console.log(body);
 
     if (!(await this.opneConfirmModal())) return;
+
+    // if(this.isDeposit)
   }
 
   async opneConfirmModal() {
@@ -93,5 +141,17 @@ export class TransfersComponent {
       .afterClosed()
       .pipe(filter((res) => res))
       .toPromise();
+  }
+
+  balanceValidator(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null =>
+      this.user.balance < control.value
+        ? { notmatch: 'The amount must be equal or less then balance' }
+        : null;
+  }
+
+  ngOnDestroy(): void {
+    this.$destroy.next(true);
+    this.$destroy.complete();
   }
 }

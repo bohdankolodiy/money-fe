@@ -6,3 +6,9 @@ export interface ITransfer {
   card?: string;
   wallet?: string;
 }
+
+export interface ITransferBody {
+  amount: number;
+  card?: string;
+  wallet?: string;
+}

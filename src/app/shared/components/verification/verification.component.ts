@@ -1,12 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { AuthService } from '../../../services/auth/auth.service';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-verification',
   standalone: true,
-  imports: [MatProgressSpinnerModule],
+  imports: [],
   templateUrl: './verification.component.html',
   styleUrl: './verification.component.scss',
 })

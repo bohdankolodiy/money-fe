@@ -1,37 +1,24 @@
-import {
-  HttpEvent,
-  HttpHandler,
-  HttpHeaderResponse,
-  HttpInterceptor,
-  HttpRequest,
-  HttpSentEvent,
-} from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { HttpInterceptorFn, HttpRequest } from '@angular/common/http';
+import { inject } from '@angular/core';
 import { AuthService } from '../auth/auth.service';
-import { Observable } from 'rxjs';
-import { IAuthBody } from '../../shared/interfaces/auth.interface';
 
-@Injectable({
-  providedIn: 'root',
-})
-export class AuthInterceptorService implements HttpInterceptor {
-  constructor(private auth: AuthService) {}
+export const AuthInterceptor: HttpInterceptorFn = (
+  req: HttpRequest<unknown>,
+  next,
+) => {
+  const auth = inject(AuthService);
 
-  intercept(
-    req: HttpRequest<IAuthBody>,
-    next: HttpHandler,
-  ): Observable<HttpEvent<HttpSentEvent | HttpHeaderResponse>> {
-    return next.handle(this.addTokenToRequest(req, this.auth.getAccessToken()));
-  }
+  const authReq = addTokenToRequest(req, auth.getAccessToken());
+  return next(authReq);
+};
 
-  private addTokenToRequest(
-    request: HttpRequest<IAuthBody>,
-    token: string,
-  ): HttpRequest<IAuthBody> {
-    return request.clone({
-      setHeaders: {
-        authorization: 'Bearer ' + token,
-      },
-    });
-  }
+function addTokenToRequest(
+  request: HttpRequest<unknown>,
+  token: string,
+): HttpRequest<unknown> {
+  return request.clone({
+    setHeaders: {
+      authorization: `Bearer ${token}`,
+    },
+  });
 }
