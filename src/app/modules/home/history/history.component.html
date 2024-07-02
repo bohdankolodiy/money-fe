@@ -4,7 +4,7 @@
   <section
     class="w-58 h-100 p-20 flex colDir align-items-center history-block mr-10"
   >
-    @for (transact of transacts; track transact?.id) {
+    @for (transact of transacts; track transact) {
       <div class="w-90 flex align-items-center justify-space-between mt-30">
         <h2 class="text-align-center white">{{ getDate(transact) }}</h2>
         <p class="white">{{ transact.amount }}</p>
@@ -35,12 +35,33 @@
         <mat-label>Enter transact id</mat-label>
         <input matInput [formControl]="search" />
       </mat-form-field>
-      <button mat-mini-fab aria-label="Logout" class="bg-lightmain mt-5">
+      <button
+        mat-mini-fab
+        aria-label="search"
+        class="bg-lightmain mt-5"
+        (click)="searchHistory()"
+      >
         <mat-icon>search</mat-icon>
       </button>
     </div>
 
     <mat-divider class="w-100"></mat-divider>
+
+    @for (item of histroySearch; track item?.id; let j = $index) {
+      <div
+        class="bg-black p-20 history-item mt-20 flex align-items-center justify-space-between w-100"
+      >
+        @if (isReciever(item)) {
+          <ng-container
+            *ngTemplateOutlet="reciever; context: { $implicit: item }"
+          ></ng-container>
+        } @else {
+          <ng-container
+            *ngTemplateOutlet="sender; context: { $implicit: item }"
+          ></ng-container>
+        }
+      </div>
+    }
   </section>
 </main>
 
@@ -49,12 +70,40 @@
     keyboard_double_arrow_left
   </mat-icon>
   <div class="w-80">
-    <p class="whitegray">{{ item.action | uppercase }}</p>
+    <p class="whitegray">
+      {{ item.action | uppercase }}
+      @if (item.status === "Cancel") {
+        Canceled
+      }
+    </p>
     <p class="white mt-5">Money transfer from {{ item.card || item.wallet }}</p>
   </div>
   <p class="green">
     {{ item.amount }}
   </p>
+
+  @if (item.status === "Pending") {
+    <button
+      mat-icon-button
+      [matMenuTriggerFor]="menu"
+      aria-label="approvement action"
+      class="white"
+    >
+      <mat-icon>more_vert</mat-icon>
+    </button>
+
+    <mat-menu #menu="matMenu">
+      <h3 class="text-align-center ml-20 mr-20 mb-10">Approvement</h3>
+      <button mat-menu-item (click)="updatePaymentStatus(item, 'Success')">
+        <mat-icon class="green">check</mat-icon>
+        <span>Accept</span>
+      </button>
+      <button mat-menu-item (click)="updatePaymentStatus(item, 'Cancel')">
+        <mat-icon>close</mat-icon>
+        <span>Decline</span>
+      </button>
+    </mat-menu>
+  }
 </ng-template>
 
 <ng-template #sender let-item>
@@ -62,7 +111,16 @@
     keyboard_double_arrow_right
   </mat-icon>
   <div class="w-80">
-    <p class="whitegray">{{ item.action | uppercase }}</p>
+    <p class="whitegray">
+      {{ item.action | uppercase }}
+      @if (item.status === "Pending") {
+        (Wait for approvement)
+      }
+
+      @if (item.status === "Cancel") {
+        Canceled
+      }
+    </p>
     <p class="white mt-5">Money transfer to {{ item.card || item.wallet }}</p>
   </div>
   <p class="orange">

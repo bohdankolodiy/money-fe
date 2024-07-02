@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, DestroyRef, OnInit, inject } from '@angular/core';
 import {
   AbstractControl,
   FormControl,
@@ -17,6 +17,7 @@ import { HeaderComponent } from '../../../shared/components/header/header.compon
 import { IUser } from '../../../shared/interfaces/user.interface';
 import { UserService } from '../../../services/user/user.service';
 import { WalletPipe } from '../../../shared/pipes/wallet.pipe';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-payment',
@@ -37,6 +38,7 @@ import { WalletPipe } from '../../../shared/pipes/wallet.pipe';
 export class PaymentComponent implements OnInit {
   user!: IUser;
   paymentForm!: FormGroup;
+  private destroyRef = inject(DestroyRef);
 
   get recieverWallet(): AbstractControl {
     return this.paymentForm.get('recieverWallet')!;
@@ -57,7 +59,7 @@ export class PaymentComponent implements OnInit {
 
   buildPaymentForm() {
     this.paymentForm = new FormGroup({
-      recieverWallet: new FormControl('', [
+      wallet: new FormControl('', [
         Validators.required,
         Validators.minLength(16),
         Validators.maxLength(16),
@@ -68,6 +70,15 @@ export class PaymentComponent implements OnInit {
       ]),
       comment: new FormControl(''),
     });
+  }
+
+  submit() {
+    if (this.paymentForm.invalid) return;
+
+    this.userService
+      .transactMoney(this.paymentForm.getRawValue())
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => this.paymentForm.reset());
   }
 
   balanceValidator(): ValidatorFn {

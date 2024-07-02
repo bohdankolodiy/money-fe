@@ -1,6 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  DestroyRef,
   OnDestroy,
   OnInit,
   effect,
@@ -24,11 +25,12 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { ConfirmationModalComponent } from '../../../shared/components/confirmation-modal/confirmation-modal.component';
-import { Subject, filter } from 'rxjs';
+import { filter, tap } from 'rxjs';
 import { HeaderComponent } from '../../../shared/components/header/header.component';
 import { TransactTypes } from '../../../shared/enums/transact-types.enum';
 import { IUser } from '../../../shared/interfaces/user.interface';
 import { UserService } from '../../../services/user/user.service';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-transfers',
@@ -50,13 +52,13 @@ import { UserService } from '../../../services/user/user.service';
 })
 export class TransfersComponent implements OnInit, OnDestroy {
   user!: IUser;
-  private $destroy: Subject<boolean> = new Subject();
+  private destroyRef = inject(DestroyRef);
   _dialog = inject(MatDialog);
   transferType = signal<string>(TransactTypes.DEPOSIT);
   transfersForm!: FormGroup;
 
   get cardNumbber(): AbstractControl {
-    return this.transfersForm.get('cardNumber')!;
+    return this.transfersForm.get('card')!;
   }
 
   get amount(): AbstractControl {
@@ -101,7 +103,7 @@ export class TransfersComponent implements OnInit, OnDestroy {
 
   buildTransfersForm() {
     this.transfersForm = new FormGroup({
-      cardNumber: new FormControl('', [
+      card: new FormControl('', [
         Validators.required,
         Validators.maxLength(16),
         Validators.minLength(16),
@@ -120,11 +122,23 @@ export class TransfersComponent implements OnInit, OnDestroy {
       ...this.transfersForm.getRawValue(),
     };
 
-    console.log(body);
-
     if (!(await this.opneConfirmModal())) return;
 
-    // if(this.isDeposit)
+    (this.isDeposit
+      ? this.userService.depositMoney(body)
+      : this.userService.withdrawalMoney(body)
+    )
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        tap(() => this.transfersForm.reset()),
+      )
+      .subscribe(
+        (res) =>
+          (this.user = this.userService.updateUserBalance(
+            this.user,
+            res.balance,
+          )),
+      );
   }
 
   async opneConfirmModal() {
@@ -150,8 +164,5 @@ export class TransfersComponent implements OnInit, OnDestroy {
         : null;
   }
 
-  ngOnDestroy(): void {
-    this.$destroy.next(true);
-    this.$destroy.complete();
-  }
+  ngOnDestroy(): void {}
 }

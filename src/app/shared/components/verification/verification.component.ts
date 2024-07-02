@@ -18,7 +18,6 @@ export class VerificationComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    console.log();
     const id: string = this.route.snapshot.queryParams['id'];
     if (id) this.vefiry(id);
     else this.authService.loginRedirect(['/login']);
