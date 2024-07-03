@@ -5,9 +5,10 @@ import {
   IAuthSuccesRespons,
   IAuthToken,
 } from '../../shared/interfaces/auth.interface';
-import { Observable, tap } from 'rxjs';
+import { Observable, switchMap, tap } from 'rxjs';
 import { CookieService } from 'ngx-cookie-service';
 import { Router } from '@angular/router';
+import { UserService } from '../user/user.service';
 
 @Injectable({
   providedIn: 'root',
@@ -18,6 +19,7 @@ export class AuthService {
   constructor(
     private http: HttpClient,
     private cookieService: CookieService,
+    private userService: UserService,
     private router: Router,
   ) {}
 
@@ -38,6 +40,7 @@ export class AuthService {
         this.cookieService.set('access_token', accessToken);
         this.loginRedirect(['/home']);
       }),
+      switchMap(() => this.userService.getUser()),
     );
   }
 

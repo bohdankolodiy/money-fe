@@ -23,7 +23,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   constructor(private userService: UserService) {}
 
   ngOnInit(): void {
-    this.getUser();
+    if(!this.userService.getCookieUser()) this.getUser();
   }
 
   getUser() {
