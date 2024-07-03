@@ -8,7 +8,7 @@
     <mat-button-toggle-group
       name="transferType"
       aria-label="Transfers type"
-      (change)="transferType = $event.value"
+      (change)="setTransferType($event)"
     >
       <mat-button-toggle color="primary" checked value="deposit"
         >Deposit</mat-button-toggle
@@ -24,7 +24,7 @@
       <input
         matInput
         placeholder="XXXX-XXXX-XXXX-XXX"
-        [formControlName]="'cardNumber'"
+        [formControlName]="'card'"
         required
       />
       <mat-error>

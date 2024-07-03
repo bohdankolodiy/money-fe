@@ -13,6 +13,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth/auth.service';
 import { IAuthBody } from '../../shared/interfaces/auth.interface';
+import { LoaderService } from '../../services/loader/loader.service';
 
 @Component({
   selector: 'app-login',
@@ -51,12 +52,17 @@ export class LoginComponent {
       : 'Field is required';
   }
 
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private loaderService: LoaderService,
+  ) {}
 
   submitForm() {
     if (this.loginForm.invalid) return;
+
+    this.loaderService.setLoading(true);
     this.authService
       .login(this.loginForm.getRawValue() as IAuthBody)
-      .subscribe();
+      .subscribe(() => this.loaderService.setLoading(false));
   }
 }

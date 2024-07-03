@@ -1,8 +1,16 @@
 import { ITransfer } from './transfers.interface';
 
 export interface ITransacts {
-  id: number;
   items: ITransfer[];
   amount: number;
   date: string;
+}
+
+export interface ITransactsBody {
+  amount: number;
+  wallet: string;
+}
+
+export interface ITransactsResponse {
+  balance: number;
 }

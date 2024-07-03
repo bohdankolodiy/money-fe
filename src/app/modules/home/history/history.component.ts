@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, DestroyRef } from '@angular/core';
 import { HeaderComponent } from '../../../shared/components/header/header.component';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -8,8 +8,13 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDividerModule } from '@angular/material/divider';
 import { CommonModule } from '@angular/common';
 import { TransactTypes } from '../../../shared/enums/transact-types.enum';
-import { ITransacts } from '../../../shared/interfaces/trannsacts.interface';
+import { ITransacts } from '../../../shared/interfaces/transacts.interface';
 import { ITransfer } from '../../../shared/interfaces/transfers.interface';
+import { HistoryService } from '../../../services/history/history.service';
+import { MatMenuModule } from '@angular/material/menu';
+import { UserService } from '../../../services/user/user.service';
+import { tap } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-history',
@@ -24,98 +29,32 @@ import { ITransfer } from '../../../shared/interfaces/transfers.interface';
     MatButtonModule,
     MatDividerModule,
     CommonModule,
+    MatMenuModule,
   ],
   templateUrl: './history.component.html',
   styleUrl: './history.component.scss',
 })
 export class HistoryComponent {
   search: FormControl<string | null> = new FormControl(null);
-  transacts: ITransacts[] = [
-    {
-      id: 0,
-      amount: 1000,
-      date: '06/06/2024',
-      items: [
-        {
-          id: 1,
-          date: '06/06/2024',
-          action: 'deposit',
-          amount: 12,
-          card: '1234123412431324',
-        },
-        {
-          id: 2,
-          date: '06/06/2024',
-          action: 'withdrawal',
-          amount: 12,
-          card: '1234123412431324',
-        },
-        {
-          id: 2,
-          date: '06/06/2024',
-          action: 'payment',
-          amount: 12,
-          wallet: '1234123412431324',
-        },
-      ],
-    },
-    {
-      id: 1,
-      amount: 1000,
-      date: '05/06/2024',
-      items: [
-        {
-          id: 1,
-          date: '06/06/2024',
-          action: 'deposit',
-          amount: 12,
-          card: '1234123412431324',
-        },
-        {
-          id: 2,
-          date: '06/06/2024',
-          action: 'withdrawal',
-          amount: 12,
-          card: '1234123412431324',
-        },
-        {
-          id: 2,
-          date: '06/06/2024',
-          action: 'payment',
-          amount: 12,
-          wallet: '1234123412431324',
-        },
-      ],
-    },
-    {
-      id: 2,
-      amount: 1000,
-      date: '05/05/2024',
-      items: [
-        {
-          id: 1,
-          date: '06/06/2024',
-          action: 'deposit',
-          amount: 12,
-          card: '1234123412431324',
-        },
-        {
-          id: 2,
-          date: '06/06/2024',
-          action: 'withdrawal',
-          amount: 12,
-          card: '1234123412431324',
-        },
-        {
-          id: 2,
-          date: '06/06/2024',
-          action: 'payment',
-          amount: 12,
-          wallet: '1234123412431324',
-        },
-      ],
-    },
-  ];
+  transacts: ITransacts[] = [];
+  histroySearch: ITransfer[] = [];
+
+  constructor(
+    private historyService: HistoryService,
+    private userService: UserService,
+    private destroyRef: DestroyRef,
+  ) {}
+
+  ngOnInit(): void {
+    this.getHistory();
+  }
+
+  getHistory() {
+    this.historyService
+      .getUserHistory()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((res) => (this.transacts = res));
+  }
 
   isReciever(item: ITransfer): boolean {
     return Boolean(
@@ -129,5 +68,21 @@ export class HistoryComponent {
     return new Date().toDateString() === transactsDate
       ? 'Today'
       : transactsDate;
+  }
+
+  updatePaymentStatus(item: ITransfer, status: string) {
+    this.userService
+      .updatePaymentStatus(status, item.wallet!, item.amount, item.date)
+      .pipe(
+        tap(() => this.getHistory()),
+        takeUntilDestroyed(this.destroyRef),
+      )
+      .subscribe();
+  }
+
+  searchHistory() {
+    this.historyService
+      .searchAllHistory(this.search.getRawValue()!)
+      .subscribe((res) => (this.histroySearch = res));
   }
 }

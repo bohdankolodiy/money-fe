@@ -16,6 +16,7 @@ import { RouterModule } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { AuthService } from '../../services/auth/auth.service';
 import { IAuthBody } from '../../shared/interfaces/auth.interface';
+import { LoaderService } from '../../services/loader/loader.service';
 
 @Component({
   selector: 'app-registration',
@@ -71,7 +72,10 @@ export class RegistrationComponent {
       : 'Field is required';
   }
 
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private loaderService: LoaderService,
+  ) {}
 
   submitForm() {
     if (this.registrationForm.invalid) return;
@@ -79,8 +83,10 @@ export class RegistrationComponent {
       email: this.email.value,
       password: this.password.value,
     };
-
-    this.authService.registration(body).subscribe();
+    this.loaderService.setLoading(true);
+    this.authService
+      .registration(body)
+      .subscribe(() => this.loaderService.setLoading(false));
   }
 
   confirmPassValidator(): ValidatorFn {
