@@ -69,14 +69,14 @@ export class UserService {
     status: string,
     wallet: string,
     amount: number,
-    date: string,
+    transactid: string,
   ): Observable<unknown> {
     return this.http
       .put<ITransferResponse>(`${this.#pathUrl}user/status-update`, {
         status,
         wallet,
         amount,
-        date,
+        transactid,
       })
       .pipe(tap(() => this.toastr.success('Status was updated')));
   }

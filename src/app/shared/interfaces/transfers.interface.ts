@@ -7,6 +7,7 @@ export interface ITransfer {
   comment: string;
   card?: string;
   wallet?: string;
+  transactid?: string;
 }
 
 export interface ITransferBody {
