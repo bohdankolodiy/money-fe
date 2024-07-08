@@ -28,7 +28,7 @@ export class AuthService {
       .post<IAuthSuccesRespons>(`${this.#authUrl}/register`, body)
       .pipe(
         tap(() => {
-          this.loginRedirect(['/wait-email', '/approveRegistration']);
+          this.loginRedirect(['/wait-email', 'approveRegistration']);
         }),
       );
   }
@@ -59,6 +59,25 @@ export class AuthService {
   logout() {
     this.deleteCookies();
     this.loginRedirect(['/login']);
+  }
+
+  forgetPassword(email: string): Observable<unknown> {
+    return this.http.post(`${this.#authUrl}/forgetPassword`, { email }).pipe(
+      tap(() => {
+        this.loginRedirect(['/wait-email', 'resetPassword']);
+      }),
+    );
+  }
+
+  resetPassword(body: {
+    token: string;
+    password: string;
+  }): Observable<unknown> {
+    return this.http.post(`${this.#authUrl}/resetPassword`, body).pipe(
+      tap(() => {
+        this.loginRedirect(['/login']);
+      }),
+    );
   }
 
   loginRedirect(params: Array<string>) {

@@ -72,7 +72,7 @@ export class HistoryComponent {
 
   updatePaymentStatus(item: ITransfer, status: string) {
     this.userService
-      .updatePaymentStatus(status, item.wallet!, item.amount, item.date)
+      .updatePaymentStatus(status, item.wallet!, item.amount, item.transactid!)
       .pipe(
         tap(() => this.getHistory()),
         takeUntilDestroyed(this.destroyRef),
