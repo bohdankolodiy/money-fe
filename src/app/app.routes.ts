@@ -29,13 +29,19 @@ export const routes: Routes = [
       ).then((m) => m.ForgetPasswordComponent),
   },
   {
-    path: 'veification',
+    path: 'verification',
     loadComponent: () =>
       import('./shared/components/verification/verification.component').then(
         (m) => m.VerificationComponent,
       ),
   },
-
+  {
+    path: 'reset-password',
+    loadComponent: () =>
+      import(
+        './shared/components/reset-password/reset-password.component'
+      ).then((m) => m.ResetPasswordComponent),
+  },
   {
     path: 'home',
     loadChildren: () =>

@@ -30,7 +30,7 @@ export const ErrorCatchingInterceptor: HttpInterceptorFn = (
       return evt;
     }),
     catchError((error: HttpErrorResponse) => {
-      const errorMsg = error.message;
+      const errorMsg = error?.error?.message ?? error.message;
       spinner.setLoading(false);
       notifier.error(errorMsg);
       return throwError(() => error);

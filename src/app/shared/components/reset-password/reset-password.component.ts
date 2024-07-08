@@ -1,4 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, DestroyRef, OnInit } from '@angular/core';
+import { AuthService } from '../../../services/auth/auth.service';
+import { ActivatedRoute, RouterModule } from '@angular/router';
 import {
   AbstractControl,
   FormControl,
@@ -12,13 +14,11 @@ import {
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { RouterModule } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
-import { AuthService } from '../../services/auth/auth.service';
-import { IAuthBody } from '../../shared/interfaces/auth.interface';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
-  selector: 'app-registration',
+  selector: 'app-reset-password',
   standalone: true,
   imports: [
     MatFormFieldModule,
@@ -26,18 +26,20 @@ import { IAuthBody } from '../../shared/interfaces/auth.interface';
     FormsModule,
     ReactiveFormsModule,
     MatButtonModule,
-    MatIconModule,
     RouterModule,
+    MatIconModule,
   ],
-  templateUrl: './registration.component.html',
-  styleUrl: './registration.component.scss',
+  templateUrl: './reset-password.component.html',
+  styleUrl: './reset-password.component.scss',
 })
-export class RegistrationComponent {
+export class ResetPasswordComponent implements OnInit {
+  isLoading: boolean = false;
   passwordVisibility: boolean = true;
   passwordConfirmVisibility: boolean = true;
 
-  registrationForm = new FormGroup({
-    email: new FormControl<string>('', [Validators.required, Validators.email]),
+  token: string = '';
+
+  resetPasswordForm = new FormGroup({
     password: new FormControl<string>('', [Validators.required]),
     confirmPassword: new FormControl<string>('', [
       Validators.required,
@@ -45,14 +47,11 @@ export class RegistrationComponent {
     ]),
   });
 
-  get email(): AbstractControl {
-    return this.registrationForm.get('email')!;
-  }
   get password(): AbstractControl {
-    return this.registrationForm.get('password')!;
+    return this.resetPasswordForm.get('password')!;
   }
   get confirmPassword(): AbstractControl {
-    return this.registrationForm.get('confirmPassword')!;
+    return this.resetPasswordForm.get('confirmPassword')!;
   }
 
   get passwordError() {
@@ -65,30 +64,32 @@ export class RegistrationComponent {
       : 'This value should be the same as password';
   }
 
-  get emailError() {
-    return this.email.hasError('email')
-      ? 'Not a valid email'
-      : 'Field is required';
-  }
-
   constructor(
     private authService: AuthService,
+    private route: ActivatedRoute,
+
+    private destroyRef: DestroyRef,
   ) {}
 
-  submitForm() {
-    if (this.registrationForm.invalid) return;
-    const body: IAuthBody = {
-      email: this.email.value,
+  ngOnInit(): void {
+    this.token = this.route.snapshot.queryParams['token'];
+  }
+
+  onResetPassword() {
+    if (this.resetPasswordForm.invalid || !this.token) return;
+    const body = {
       password: this.password.value,
+      token: this.token,
     };
     this.authService
-      .registration(body)
+      .resetPassword(body)
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe();
   }
 
   confirmPassValidator(): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null =>
-      this.registrationForm?.value?.password !== control.value
+      this.resetPasswordForm?.value?.password !== control.value
         ? { notmatch: 'This value should be the same as password' }
         : null;
   }
