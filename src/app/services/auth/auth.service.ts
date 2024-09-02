@@ -38,9 +38,9 @@ export class AuthService {
       tap((res) => {
         const { accessToken } = res as IAuthToken;
         this.cookieService.set('access_token', accessToken);
-        this.loginRedirect(['/home']);
       }),
       switchMap(() => this.userService.getUser()),
+      tap(() => this.loginRedirect(['/home'])),
     );
   }
 
@@ -76,6 +76,14 @@ export class AuthService {
     return this.http.post(`${this.#authUrl}/resetPassword`, body).pipe(
       tap(() => {
         this.loginRedirect(['/login']);
+      }),
+    );
+  }
+
+  delete() {
+    return this.http.delete(`${this.#authUrl}/delete`, {}).pipe(
+      tap(() => {
+        this.logout();
       }),
     );
   }

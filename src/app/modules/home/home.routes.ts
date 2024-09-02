@@ -33,6 +33,12 @@ export const routes: Routes = [
           import('./history/history.component').then((m) => m.HistoryComponent),
         canActivate: [authGuard],
       },
+      {
+        path: 'chat',
+        loadComponent: () =>
+          import('./chat/chat.component').then((m) => m.ChatComponent),
+        canActivate: [authGuard],
+      },
     ],
   },
 ];

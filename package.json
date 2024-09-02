@@ -26,8 +26,10 @@
     "bootstrap": "^5.3.3",
     "https-proxy-agent": "^7.0.4",
     "ngx-cookie-service": "^17.1.0",
+    "ngx-socket-io": "4.6",
     "ngx-toastr": "^19.0.0",
     "rxjs": "~7.8.0",
+    "socket.io-client": "^4.7.5",
     "tslib": "^2.3.0",
     "zone.js": "~0.14.2"
   },
