@@ -9,12 +9,13 @@ export class WebsocketService {
   socket: WebSocket;
   constructor() {
     this.socket = new WebSocket('ws://127.0.0.1:3000/ws');
-    this.socket.addEventListener('open', function (event) {
-      console.log('WebSocket is open now.', event);
-    });
   }
 
-  subscribeToGetMessageEvent() {
+  subscribeToGetMessageEvent(userId: string) {
+    this.socket.addEventListener('open', () => {
+      this.socket.send(JSON.stringify({ meta: 'join', clientId: userId }));
+    });
+
     this.socket.addEventListener('message', (event) => {
       if (event.data === 'get_message') {
         this.getMessage.next(true);

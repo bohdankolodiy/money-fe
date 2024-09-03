@@ -139,6 +139,10 @@ export class ChatComponent {
       chat_id: this.selectedChat()!.chat_id,
       text: this.text.value?.toString().trim(),
       sender_id: this.userService.getCookieUser().id,
+      reciever_id:
+        this.selectedChat()!.user1_id === this.userService.getCookieUser().id
+          ? this.selectedChat()!.user2_id
+          : this.selectedChat()!.user1_id,
     };
 
     this.text.reset();

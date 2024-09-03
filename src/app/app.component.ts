@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { LoaderService } from './services/loader/loader.service';
 import { LoaderComponent } from './shared/components/loader/loader.component';
-import { WebsocketService } from './services/websockets/websocket.service';
 
 @Component({
   selector: 'app-root',
@@ -14,14 +13,7 @@ import { WebsocketService } from './services/websockets/websocket.service';
 })
 export class AppComponent {
   title = 'money-fe';
-  constructor(
-    private loaderService: LoaderService,
-    private websocketService: WebsocketService,
-  ) {}
-
-  ngOnInit() {
-    this.websocketService.subscribeToGetMessageEvent();
-  }
+  constructor(private loaderService: LoaderService) {}
 
   get isLoading(): boolean {
     return this.loaderService.loading;
