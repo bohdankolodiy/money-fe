@@ -56,7 +56,7 @@
       <p class="white chat-title mb-5 flex align-items-center">
         {{ getChatTitle(selectedChat()!) | wallet }}
       </p>
-      <button mat-flat-button color="warn" class="send-button font-size-16">
+      <button mat-flat-button color="warn" class="send-button font-size-16" (click)="deleteChat()">
         <mat-icon class="mr-0">delete</mat-icon>
       </button>
     </div>

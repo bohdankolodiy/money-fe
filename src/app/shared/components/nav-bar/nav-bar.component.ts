@@ -27,6 +27,6 @@ export class NavBarComponent {
   }
 
   deleteAccount() {
-    this.authService.delete()
+    this.authService.deleteAccount().subscribe();
   }
 }

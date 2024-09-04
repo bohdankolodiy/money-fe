@@ -3,5 +3,5 @@ export interface IUser {
   email: string;
   wallet: string;
   balance: number;
-  isverify: boolean;
+  is_verify: boolean;
 }

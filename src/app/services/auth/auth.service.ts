@@ -80,7 +80,7 @@ export class AuthService {
     );
   }
 
-  delete() {
+  deleteAccount() {
     return this.http.delete(`${this.#authUrl}/delete`, {}).pipe(
       tap(() => {
         this.logout();

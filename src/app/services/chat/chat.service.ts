@@ -24,10 +24,16 @@ export class ChatService {
   }
 
   getChatMessage(id: string): Observable<IMessagesResponce[]> {
-    return this.http.get<IMessagesResponce[]>(`${this.#pathUrl}chat/message/${id}`);
+    return this.http.get<IMessagesResponce[]>(
+      `${this.#pathUrl}chat/message/${id}`,
+    );
   }
 
   addMessage(body: Partial<IMessages>): Observable<IMessages> {
     return this.http.post<IMessages>(`${this.#pathUrl}chat/message/add`, body);
+  }
+
+  deleteChat(chat_id: string): Observable<unknown> {
+    return this.http.delete<unknown>(`${this.#pathUrl}chat/${chat_id}`);
   }
 }

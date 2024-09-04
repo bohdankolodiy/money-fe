@@ -156,6 +156,13 @@ export class ChatComponent {
       .subscribe((res) => (this.messages = res));
   }
 
+  deleteChat() {
+    this.chatService.deleteChat(this.selectedChat()!.chat_id).subscribe(() => {
+      this.selectedChat.set(null);
+      this.getChats();
+    });
+  }
+
   isToday(date: string): boolean {
     return (
       new Date(date).setHours(0, 0, 0, 0) === new Date().setHours(0, 0, 0, 0)
