@@ -26,11 +26,15 @@ export class UserService {
   ) {}
 
   getUser(): Observable<IUser> {
-    return this.http.get<IUser>(`${this.#pathUrl}/user`).pipe(
+    return this.http.get<IUser>(`${this.#pathUrl}user`).pipe(
       tap((res) => {
         this.setUserCookie(res);
       }),
     );
+  }
+
+  getUsers(): Observable<IUser[]> {
+    return this.http.get<IUser[]>(`${this.#pathUrl}user/all`);
   }
 
   setUserCookie(user: IUser) {
@@ -38,7 +42,8 @@ export class UserService {
   }
 
   getCookieUser(): IUser {
-    return JSON.parse(this.cookieService.get('user'));
+    const user = this.cookieService.get('user');
+    return user ? JSON.parse(user) : '';
   }
 
   depositMoney(body: ITransferBody): Observable<ITransferResponse> {

@@ -51,9 +51,7 @@ export class LoginComponent {
       : 'Field is required';
   }
 
-  constructor(
-    private authService: AuthService,
-  ) {}
+  constructor(private authService: AuthService) {}
 
   submitForm() {
     if (this.loginForm.invalid) return;
