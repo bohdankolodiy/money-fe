@@ -72,13 +72,12 @@
   <div class="w-80">
     <p class="whitegray">
       {{ item.action | uppercase }}
-      @if (item.status === "Cancel") {
-        Canceled
-      }
+      {{ getMessageByStatus(item.status) }}
+      - ID: {{ item.id }}
     </p>
     <p class="white mt-5">Money transfer from {{ item.card || item.wallet }}</p>
   </div>
-  <p class="green">
+  <p [class]="item.status === 'Revert' ? 'whitegray' : 'green'">
     {{ item.amount }}
   </p>
 
@@ -113,17 +112,31 @@
   <div class="w-80">
     <p class="whitegray">
       {{ item.action | uppercase }}
-      @if (item.status === "Pending") {
-        (Wait for approvement)
-      }
-
-      @if (item.status === "Cancel") {
-        Canceled
-      }
+      {{ getMessageByStatus(item.status) }}
+      - ID: {{ item.id }}
     </p>
     <p class="white mt-5">Money transfer to {{ item.card || item.wallet }}</p>
   </div>
-  <p class="orange">
+  <p [class]="item.status === 'Revert' ? 'whitegray' : 'orange'">
     {{ item.amount }}
   </p>
+
+  @if (item.status === "Success" && isLastTransfer(item)) {
+    <button
+      mat-icon-button
+      [matMenuTriggerFor]="menu"
+      aria-label="approvement action"
+      class="white"
+    >
+      <mat-icon>more_vert</mat-icon>
+    </button>
+
+    <mat-menu #menu="matMenu">
+      <h3 class="text-align-center ml-20 mr-20 mb-10">Reverting</h3>
+      <button mat-menu-item (click)="updatePaymentStatus(item, 'Revert')">
+        <mat-icon class="green">restore</mat-icon>
+        <span>Revert</span>
+      </button>
+    </mat-menu>
+  }
 </ng-template>

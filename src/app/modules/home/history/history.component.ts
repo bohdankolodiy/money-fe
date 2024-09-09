@@ -13,8 +13,9 @@ import { ITransfer } from '../../../shared/interfaces/transfers.interface';
 import { HistoryService } from '../../../services/history/history.service';
 import { MatMenuModule } from '@angular/material/menu';
 import { UserService } from '../../../services/user/user.service';
-import { tap } from 'rxjs';
+import { switchMap, tap } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { HistoryStatus } from '../../../shared/enums/history-status.enum';
 
 @Component({
   selector: 'app-history',
@@ -74,8 +75,9 @@ export class HistoryComponent {
     this.userService
       .updatePaymentStatus(status, item.wallet!, item.amount, item.transact_id!)
       .pipe(
-        tap(() => this.getHistory()),
+        switchMap(() => this.userService.getUser()),
         takeUntilDestroyed(this.destroyRef),
+        tap(() => this.getHistory()),
       )
       .subscribe();
   }
@@ -84,5 +86,25 @@ export class HistoryComponent {
     this.historyService
       .searchAllHistory(this.search.getRawValue()!)
       .subscribe((res) => (this.histroySearch = res));
+  }
+
+  getMessageByStatus(status: string): string {
+    switch (status) {
+      case HistoryStatus.Pending:
+        return '(Wait for approvement)';
+
+      case HistoryStatus.Cancel:
+        return '(Canceled)';
+
+      case HistoryStatus.Revert:
+        return '(Reverted)';
+
+      default:
+        return '';
+    }
+  }
+
+  isLastTransfer(item: ITransfer): boolean {
+    return this.transacts[0]?.items[0]?.id === item.id;
   }
 }
