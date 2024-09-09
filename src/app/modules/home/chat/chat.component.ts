@@ -25,6 +25,7 @@ import {
 import { UserService } from '../../../services/user/user.service';
 import { WebsocketService } from '../../../services/websockets/websocket.service';
 import { DatePipe } from '@angular/common';
+import { ConfirmationService } from '../../../services/confirmation/confirmation.service';
 
 @Component({
   selector: 'app-chat',
@@ -56,6 +57,7 @@ export class ChatComponent {
     private userService: UserService,
     private df: DestroyRef,
     private webSocketService: WebsocketService,
+    private confirmationService: ConfirmationService,
   ) {
     effect(
       () => {
@@ -157,10 +159,18 @@ export class ChatComponent {
   }
 
   deleteChat() {
-    this.chatService.deleteChat(this.selectedChat()!.chat_id).subscribe(() => {
-      this.selectedChat.set(null);
-      this.getChats();
-    });
+    this.confirmationService
+      .opneConfirmModal('Deletion', 'Are you sure you want to delete chat?')
+      .pipe(
+        takeUntilDestroyed(),
+        switchMap(() =>
+          this.chatService.deleteChat(this.selectedChat()!.chat_id),
+        ),
+      )
+      .subscribe(() => {
+        this.selectedChat.set(null);
+        this.getChats();
+      });
   }
 
   isToday(date: string): boolean {
