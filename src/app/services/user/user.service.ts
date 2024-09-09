@@ -77,7 +77,7 @@ export class UserService {
     transact_id: string,
   ): Observable<unknown> {
     return this.http
-      .put<ITransferResponse>(`${this.#pathUrl}user/status-update`, {
+      .put<ITransferResponse>(`${this.#pathUrl}user/statusUpdate`, {
         status,
         wallet,
         amount,
