@@ -2,26 +2,33 @@
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.0.6.
 
-## Development server
+## Requirements to launch the project
+    Node.js: Ensure Node.js is installed (v14+ is recommended for Angular). Angular relies on Node.js for running its build tools.
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+    Package Manager: Use npm (comes with Node.js) or Yarn to manage project dependencies.
 
-## Code scaffolding
+    Angular CLI: Install Angular CLI globally. It provides a command-line interface for Angular development.
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+## Commands to run the project:
 
-## Build
+    For build project : Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+    For only run : Run `npm run start` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
 
-## Running unit tests
+## Description of the project
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+The Money Platform is a comprehensive financial management system designed to provide users with a seamless and secure way to handle their digital transactions. Here’s an overview of its key features:
 
-## Running end-to-end tests
+    User Registration and E-Wallet Management:
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+        User Accounts: Each user can register on the platform to create a personal account.
+        E-Wallets: Upon registration, users are assigned their own e-wallet, which serves as a digital repository for their funds.
 
-## Further help
+    Financial Transactions:
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+        Peer-to-Peer Payments: Users can transfer money to other users using their e-wallet numbers, facilitating easy and direct financial transactions.
+        Deposits and Withdrawals: The platform supports depositing money into and withdrawing funds from users' e-wallets to and from their credit cards, ensuring flexible management of funds.
+
+    Communication:
+
+        In-App Chat: Users can engage in real-time conversations within the platform, allowing them to discuss their financial operations and transactions securely with other wallet owners.
