@@ -84,9 +84,12 @@ export class ChatComponent {
       .pipe(
         takeUntilDestroyed(this.df),
         filter((data) => !!data),
-        switchMap(() => this.getMessages()),
+        tap((res) => this.setLastMessage(res.chat_id, res.message)),
+        filter(() => !!this.selectedChat()?.chat_id),
       )
-      .subscribe((res) => (this.messages = res));
+      .subscribe((res) =>
+        this.messages[this.messages.length - 1].messages.push(res.message),
+      );
   }
 
   getMessages(): Observable<IMessagesResponce[]> {
@@ -153,6 +156,7 @@ export class ChatComponent {
       .addMessage(body)
       .pipe(
         takeUntilDestroyed(this.df),
+        tap((res) => this.setLastMessage(this.selectedChat()!.chat_id, res)),
         switchMap(() => this.getMessages()),
       )
       .subscribe((res) => (this.messages = res));
@@ -173,6 +177,11 @@ export class ChatComponent {
       });
   }
 
+  setLastMessage(chat_id: string, message: IMessages) {
+    const currentChat = this.chats.find((el) => chat_id === el.chat_id);
+    if (currentChat && message) currentChat.last_message = message;
+  }
+
   isToday(date: string): boolean {
     return (
       new Date(date).setHours(0, 0, 0, 0) === new Date().setHours(0, 0, 0, 0)
@@ -180,6 +189,7 @@ export class ChatComponent {
   }
 
   getTime(date: string): string {
-    return `${new Date(date).getHours()}:${new Date(date).getMinutes()}`;
+    const minutes: number = new Date(date).getMinutes();
+    return `${new Date(date).getHours()}:${String(minutes).padStart(2, '0')}`;
   }
 }

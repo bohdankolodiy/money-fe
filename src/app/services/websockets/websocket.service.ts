@@ -1,11 +1,18 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
+import { IMessages } from '../../shared/interfaces/chat.interface';
+
+interface INewMessageEvent {
+  event: string;
+  chat_id: string;
+  message: IMessages;
+}
 
 @Injectable({
   providedIn: 'root',
 })
 export class WebsocketService {
-  getMessage: Subject<boolean> = new Subject();
+  getMessage: Subject<INewMessageEvent> = new Subject();
   socket: WebSocket;
   constructor() {
     this.socket = new WebSocket('ws://127.0.0.1:3000/ws');
@@ -17,9 +24,10 @@ export class WebsocketService {
     });
 
     this.socket.addEventListener('message', (event) => {
-      if (event.data === 'get_message') {
-        this.getMessage.next(true);
-      }
+      const transformEvent: INewMessageEvent = JSON.parse(event.data);
+
+      if (transformEvent.event === 'get_message')
+        this.getMessage.next(transformEvent);
     });
   }
 }

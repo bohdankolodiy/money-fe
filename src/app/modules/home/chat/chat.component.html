@@ -56,7 +56,12 @@
       <p class="white chat-title mb-5 flex align-items-center">
         {{ getChatTitle(selectedChat()!) | wallet }}
       </p>
-      <button mat-flat-button color="warn" class="send-button font-size-16" (click)="deleteChat()">
+      <button
+        mat-flat-button
+        color="warn"
+        class="send-button font-size-16"
+        (click)="deleteChat()"
+      >
         <mat-icon class="mr-0">delete</mat-icon>
       </button>
     </div>
@@ -76,7 +81,7 @@
               }}</span>
             </div>
           } @else {
-            <div class="message-text flex">
+            <div class="message-text reciever flex">
               <p class="text">{{ message.text }}</p>
               <span class="time ml-20 mt-10 font-size-12">{{
                 getTime(message.send_date)
