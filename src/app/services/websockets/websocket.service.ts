@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import { IMessages } from '../../shared/interfaces/chat.interface';
+import { environment } from '../../../environments/environment';
 
 interface INewMessageEvent {
   event: string;
@@ -15,7 +16,7 @@ export class WebsocketService {
   getMessage: Subject<INewMessageEvent> = new Subject();
   socket: WebSocket;
   constructor() {
-    this.socket = new WebSocket('ws://127.0.0.1:3000/ws');
+    this.socket = new WebSocket(environment.websocketApi);
   }
 
   subscribeToGetMessageEvent(userId: string) {
