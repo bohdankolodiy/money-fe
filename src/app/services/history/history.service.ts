@@ -6,12 +6,13 @@ import { Observable } from 'rxjs';
 import { UserService } from '../user/user.service';
 import { ITransacts } from '../../shared/interfaces/transacts.interface';
 import { ITransfer } from '../../shared/interfaces/transfers.interface';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class HistoryService {
-  #pathUrl: string = '/api/v1/';
+  #pathUrl: string = environment.API + '/api/v1/';
 
   constructor(
     private http: HttpClient,

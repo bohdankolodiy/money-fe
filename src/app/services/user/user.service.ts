@@ -12,12 +12,13 @@ import {
   ITransactsResponse,
 } from '../../shared/interfaces/transacts.interface';
 import { ToastrService } from 'ngx-toastr';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UserService {
-  #pathUrl: string = '/api/v1/';
+  #pathUrl: string = environment.API + '/api/v1/';
 
   constructor(
     private http: HttpClient,

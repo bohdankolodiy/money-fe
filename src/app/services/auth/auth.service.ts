@@ -9,12 +9,13 @@ import { Observable, switchMap, tap } from 'rxjs';
 import { CookieService } from 'ngx-cookie-service';
 import { Router } from '@angular/router';
 import { UserService } from '../user/user.service';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  #pathUrl: string = '/api/v1/';
+  #pathUrl: string = environment.API + '/api/v1/';
   #authUrl: string = `${this.#pathUrl}auth`;
   constructor(
     private http: HttpClient,

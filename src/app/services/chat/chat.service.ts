@@ -7,12 +7,13 @@ import {
   IMessages,
   IMessagesResponce,
 } from '../../shared/interfaces/chat.interface';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ChatService {
-  #pathUrl: string = '/api/v1/';
+  #pathUrl: string = environment.API + '/api/v1/';
   constructor(private http: HttpClient) {}
 
   getUserChats(): Observable<IChatResponse[]> {
