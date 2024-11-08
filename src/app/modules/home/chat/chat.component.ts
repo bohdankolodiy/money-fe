@@ -64,9 +64,16 @@ export class ChatComponent {
   messages: IMessagesResponce[] = [];
   last_page: number = 0;
   page: number = 0;
-  scroll$!: Observable<UIEvent>;
 
   @ViewChild('messagesBlock') public messagesBlock!: ElementRef;
+
+  get filteredChats() {
+    return this.chats.filter(
+      (res) =>
+        res.wallet_1.includes(this.search.value ?? '') ||
+        res.wallet_2.includes(this.search.value ?? ''),
+    );
+  }
 
   constructor(
     private dialog: MatDialog,
