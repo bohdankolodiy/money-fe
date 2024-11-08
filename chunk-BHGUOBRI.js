@@ -1,0 +1,1 @@
+import{oa as n}from"./chunk-OKELX4WV.js";var o=(()=>{let t=class t{transform(r){return r.split("").reduce((s,a,p)=>s+a+((p+1)%4===0?" ":""),"")}};t.\u0275fac=function(i){return new(i||t)},t.\u0275pipe=n({name:"wallet",type:t,pure:!0,standalone:!0});let e=t;return e})();export{o as a};
