@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
-import { IMessages } from '../../shared/interfaces/chat.interface';
+import { IMessage } from '../../shared/interfaces/chat.interface';
 import { environment } from '../../../environments/environment';
 
 interface INewMessageEvent {
   event: string;
   chat_id: string;
-  message: IMessages;
+  message: IMessage;
 }
 
 @Injectable({
